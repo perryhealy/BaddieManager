@@ -9,19 +9,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="232dp">
+        android:layout_margin="100dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please Login:" />
+            android:text="Please Login:"
+            android:textSize="24dp"/>
 
         <EditText
             android:id="@+id/user"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:inputType="text"
             android:text="username" />
 
         <EditText
@@ -30,6 +31,13 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:text="password" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Let's gooo"
+            android:id="@+id/go"
+            android:onClick="login"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
