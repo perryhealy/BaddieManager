@@ -18,6 +18,20 @@ public class MainActivity extends AppCompatActivity {
         String user = userField.getText().toString();
         EditText passField = findViewById(R.id.pass);
         String password = passField.getText().toString();
+
+        setContentView(R.layout.photo_capture);
     }
+
+    public void post(View v) {
+        setContentView(R.layout.post_page);
+        // TODO stuff that posts to insta/fb
+
+    }
+
+    public void camera() {
+
+    }
+
+
 
 }
