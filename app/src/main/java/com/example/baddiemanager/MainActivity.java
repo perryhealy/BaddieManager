@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     Bitmap bitty = null;
     byte[] byteArray = null;
-
+    private static final int WRITE_CODE = 1600;
+    boolean havePermission = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +62,30 @@ public class MainActivity extends AppCompatActivity {
         // TODO stuff that posts to insta/fb
                 // COMMENT OUT ALL THIS CODE EXCEPT THE LAST LINE IF U NEED TO MAKE THINGS WORK
 
-        // STEP ONE:  CONVERT THE BITMAP TO A URI
+        // STEP ZERO:  MAKE SURE WE GOT PERMISSION
+        requestSinglePermission();
 
-        /* ALTERNATE METHOD THAT THREW ERRORS :(
-        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
-        Uri bittyToUri = Uri.parse(path);
-        */
+        if (havePermission) {
 
+            // STEP ONE:  CONVERT THE BITMAP TO A URI
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
+            Uri bittyToUri = Uri.parse(path);
+
+            // STEP TWO:  SEND ALL THE INFO VIA INTENTS
+            Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+            intent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            startActivityForResult(intent, 0);
+
+
+            // STEP THREE:  SHOW THE FINAL PAGE MEANING SUCCESS
+            setContentView(R.layout.post_page);
+
+        }
+
+        // ALTERNATE METHOD THAT THREW ERRORS :(
+        /*
         // CREATING A NEW TEMPORARY STORAGE FOR PHOTOS
         File tempDir= Environment.getExternalStorageDirectory();
         tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
@@ -87,16 +105,7 @@ public class MainActivity extends AppCompatActivity {
         fos.close();
         Uri bittyToUri = Uri.fromFile(tempFile);
 
-        // STEP TWO:  SEND ALL THE INFO VIA INTENTS
-        Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-        intent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        startActivityForResult(intent, 0);
-
-
-        // STEP THREE:  SHOW THE FINAL PAGE MEANING SUCCESS
-        setContentView(R.layout.post_page);
+        */
     }
 
     public void camera(View v) {
@@ -105,18 +114,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int rc, int resc, Intent data) {
-        ImageView iv = null;
-        Bitmap bm = (Bitmap) data.getExtras().get("data");
-        iv = ((ImageView) findViewById(R.id.theView));
-        iv.setBackgroundResource(0);
-        iv.setImageBitmap(bm);
+        if (rc == 1) {
+            ImageView iv = null;
+            Bitmap bm = (Bitmap) data.getExtras().get("data");
+            iv = ((ImageView) findViewById(R.id.theView));
+            iv.setBackgroundResource(0);
+            iv.setImageBitmap(bm);
 
-        bitty = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+            bitty = ((BitmapDrawable) iv.getDrawable()).getBitmap();
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitty.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byteArray = stream.toByteArray();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitty.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byteArray = stream.toByteArray();
+        }
     }
 
+    private void requestSinglePermission() {
+        String storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        int hasPermission = checkSelfPermission(storagePermission);
+        String[] permissions = new String[] { storagePermission };
+        if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(permissions, WRITE_CODE);
+        } else {
+            havePermission = true;
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case WRITE_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    havePermission = true;
+                } else {
+                    havePermission = false;
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 }
