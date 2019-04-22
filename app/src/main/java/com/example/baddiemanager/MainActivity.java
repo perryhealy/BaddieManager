@@ -59,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void post(View v) throws IOException {
         // TODO stuff that posts to insta/fb
+                // COMMENT OUT ALL THIS CODE EXCEPT THE LAST LINE IF U NEED TO MAKE THINGS WORK
 
         // STEP ONE:  CONVERT THE BITMAP TO A URI
 
-        /* ALTERNATE METHOD THAT THREW ERRORS :( 
+        /* ALTERNATE METHOD THAT THREW ERRORS :(
         String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
         Uri bittyToUri = Uri.parse(path);
         */
