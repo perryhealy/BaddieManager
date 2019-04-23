@@ -4,40 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_purple"
+    android:backgroundTint="@android:color/holo_purple"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="100dp"
+        android:layout_margin="50dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please Login:"
-            android:textSize="24dp"/>
+            android:text="Make sure that you have Instagram downloaded, then get started!"
+            android:textAlignment="center"
+            android:textColor="#fbfbf9"
+            android:textSize="24dp" />
 
-        <EditText
-            android:id="@+id/user"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:text="username" />
+        <!--<EditText-->
+        <!--android:id="@+id/user"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:inputType="text"-->
+        <!--android:text="username" />-->
 
-        <EditText
-            android:id="@+id/pass"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:text="password" />
+        <!--<EditText-->
+        <!--android:id="@+id/pass"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:inputType="textPassword"-->
+        <!--android:text="password" />-->
 
         <Button
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Let's gooo"
             android:id="@+id/go"
-            android:onClick="login"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/white"
+            android:onClick="login"
+            android:text="Verify and Begin!" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
