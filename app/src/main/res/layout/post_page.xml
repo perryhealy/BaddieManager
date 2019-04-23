@@ -2,23 +2,33 @@
 
 <!-- page w all the posting options once a photo is selected... not sure if needed -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@android:color/holo_purple"
     android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:onClick="photoPage"
-        android:id="@+id/back"/>
-
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="congrats babey ur stuff has been posted! xoxo"
-        />
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="32dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/white"
+        android:onClick="photoPage"
+        android:text="Head Back" />
+
+
 
 
 </LinearLayout>

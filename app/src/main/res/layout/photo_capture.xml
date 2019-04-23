@@ -2,29 +2,34 @@
 
 <!-- page for taking a photo and deciding whether to post or not -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_purple"
     android:orientation="vertical">
 
     <ImageView
-        android:layout_height="250dp"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
         android:id="@+id/theView"
-        />
+        android:layout_width="373dp"
+        android:layout_height="464dp"
+        android:layout_gravity="center"
+        android:background="@android:color/darker_gray" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Take Photo"
         android:id="@+id/capture"
-        android:onClick="camera"
-        android:layout_gravity="center"/>
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:onClick="camera"
+        android:text="Take Photo" />
+
+    <Button
+        android:id="@+id/post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:text="Load Photo"
         android:id="@+id/load"
         android:onClick="load"
@@ -34,8 +39,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/post"
+=======
+        android:layout_gravity="center"
+        android:background="@android:color/white"
+>>>>>>> c1c1c7f4d9667a65b77b6cbd6605542ec94d3ffd
         android:onClick="post"
-        android:text="Post"
-        android:layout_gravity="center"/>
+        android:text="Post" />
 
 </LinearLayout>
