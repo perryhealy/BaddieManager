@@ -26,9 +26,19 @@
         android:text="Take Photo" />
 
     <Button
-        android:id="@+id/post"
+        android:id="@+id/load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Load Photo"
+        android:background="@android:color/white"
+        android:layout_margin="10dp"
+        android:onClick="load"
+        android:layout_gravity="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/post"
         android:layout_gravity="center"
         android:background="@android:color/white"
         android:onClick="post"
