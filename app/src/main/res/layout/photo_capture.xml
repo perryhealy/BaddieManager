@@ -25,6 +25,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Load Photo"
+        android:id="@+id/load"
+        android:onClick="load"
+        android:layout_gravity="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/post"
         android:onClick="post"
         android:text="Post"

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -17,13 +18,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
+
+    // REQUEST CODES:
+        // 0: LOAD PHOTO
+        // 1: TAKE PHOTO
+        // 2: INSTAGRAM
+        // 3: FACEBOOK
 
     Bitmap bitty = null;
     byte[] byteArray = null;
@@ -35,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_PERMISSION);
-            dialog.dismiss();
-            return;
-        } */
     }
 
     public void login(View v) {
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void post(View v) throws IOException {
         // TODO stuff that posts to insta/fb
-                // COMMENT OUT ALL THIS CODE EXCEPT THE LAST LINE IF U NEED TO MAKE THINGS WORK
 
         // STEP ZERO:  MAKE SURE WE GOT PERMISSION
         requestSinglePermission();
@@ -72,11 +73,24 @@ public class MainActivity extends AppCompatActivity {
             Uri bittyToUri = Uri.parse(path);
 
             // STEP TWO:  SEND ALL THE INFO VIA INTENTS
+                // INSTAGRAM
+
             Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
             intent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, 2);
+
+
+                // TODO;; WONT WORK w FACEBOOK
+                    // it literally worked the first time and then stopped lmao wtf
+            Intent fbintent = new Intent("com.facebook.stories.ADD_TO_STORY");
+            fbintent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
+            fbintent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            if (fbintent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(fbintent, 3);
+            }
 
 
             // STEP THREE:  SHOW THE FINAL PAGE MEANING SUCCESS
@@ -91,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
         tempDir.mkdir();
 
-        // TODO line below fails; cant find the directory even tho i just made it??
+        // line below fails; cant find the directory even tho i just made it??
             // or is it that it cant find the file im making/???
         File tempFile = File.createTempFile("pic", ".jpg", tempDir);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -113,12 +127,19 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(x, 1);
     }
 
+    public void load(View v) {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, 0);
+    }
+
     protected void onActivityResult(int rc, int resc, Intent data) {
+        ImageView iv = null;
+        iv = ((ImageView) findViewById(R.id.theView));
+        iv.setBackgroundResource(0);
+
         if (rc == 1) {
-            ImageView iv = null;
             Bitmap bm = (Bitmap) data.getExtras().get("data");
-            iv = ((ImageView) findViewById(R.id.theView));
-            iv.setBackgroundResource(0);
             iv.setImageBitmap(bm);
 
             bitty = ((BitmapDrawable) iv.getDrawable()).getBitmap();
@@ -126,6 +147,24 @@ public class MainActivity extends AppCompatActivity {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitty.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byteArray = stream.toByteArray();
+            return;
+        }
+
+        super.onActivityResult(rc, resc, data);
+
+        if (resc == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                bitty = BitmapFactory.decodeStream(imageStream);
+                iv.setImageBitmap(bitty);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                //Toast.makeText("Something went wrong", Toast.LENGTH_LONG).show();
+            }
+
+        } else {
+            //Toast.makeText("You haven't picked Image",Toast.LENGTH_LONG).show();
         }
     }
 
