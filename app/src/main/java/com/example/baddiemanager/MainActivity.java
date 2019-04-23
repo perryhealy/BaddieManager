@@ -35,13 +35,20 @@ public class MainActivity extends AppCompatActivity {
         // 1: TAKE PHOTO
         // 2: INSTAGRAM
         // 3: FACEBOOK
+        // 4: VIDEO
 
+    // TODO figure out how to send videos to both platforms
     Bitmap bitty = null;
     byte[] byteArray = null;
     private static final int WRITE_CODE = 1600;
     boolean havePermission = false;
     Uri bittyToUri = null;
     Uri sticky = null;
+    public static int LOAD_PHOTO = 0;
+    public static int TAKE_PHOTO = 1;
+    public static int INSTAGRAM_STORY = 2;
+    public static int FACEBOOK_STORY = 3;
+    public static int VIDEO = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
             // STEP TWO:  SEND ALL THE INFO VIA INTENTS
                 // INSTAGRAM
-
             Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
             intent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
             intent.putExtra("interactive_asset_uri", sticky);
@@ -108,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(getApplicationContext(), "Please download Instagram!", Toast.LENGTH_SHORT).show();
             }
-            // JUMPS TO ONACTIVITYRESULT, THEN RUNS FBPOST
+            // JUMPS TO ONACTIVITYRESULT, THEN RUNS FBPOST FOR FACEBOOK
 
         }
 
@@ -139,10 +145,20 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(x, 1);
     }
 
+    public void videoCamera(View v) {
+        Intent x = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        startActivityForResult(x, VIDEO);
+
+    }
+
     public void load(View v) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, 0);
+    }
+
+    public void loadVideo(View v) {
+        // TODO make this shit do something
     }
 
     protected void onActivityResult(int rc, int resc, Intent data) {
@@ -180,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (rc == 2){
             fbPost();
+        } else if (rc == 4) {
+            // TODO video saving stuff
         }
     }
 
