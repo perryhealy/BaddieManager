@@ -1,8 +1,10 @@
 package com.example.baddiemanager;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +13,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,11 +56,26 @@ public class MainActivity extends AppCompatActivity {
 //        EditText passField = findViewById(R.id.pass);
 //        String password = passField.getText().toString();
 
-        photoPage(v);
+            // use try catch ActivityNotFoundException when running an activity to the apps
+        boolean igExists = doesPackageExist("com.instagram.android");
+        boolean fbExists = doesPackageExist("com.facebook.katana");
+
+        Log.v("IG", ""+igExists);
+        Log.v("FB", ""+fbExists);
+
+        if (!igExists || !fbExists) {
+            setContentView(R.layout.failure_page);
+        } else {
+            photoPage(v);
+        }
     }
 
     public void photoPage(View v) {
         setContentView(R.layout.photo_capture);
+    }
+
+    public void backToMain(View v) {
+        setContentView(R.layout.activity_main);
     }
 
     public void igPost(View v) throws IOException {
@@ -84,9 +103,12 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("interactive_asset_uri", sticky);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            startActivityForResult(intent, 2);
+            try {
+                startActivityForResult(intent, 2);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getApplicationContext(), "Please download Instagram!", Toast.LENGTH_SHORT).show();
+            }
             // JUMPS TO ONACTIVITYRESULT, THEN RUNS FBPOST
-
 
         }
 
@@ -100,9 +122,12 @@ public class MainActivity extends AppCompatActivity {
         fbintent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         if (fbintent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(fbintent, 3);
+            try {
+                startActivityForResult(fbintent, 3);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getApplicationContext(), "Please download Facebook!", Toast.LENGTH_SHORT).show();
+            }
         }
-
 
         // STEP THREE:  SHOW THE FINAL PAGE MEANING SUCCESS
         setContentView(R.layout.post_page);
@@ -182,5 +207,18 @@ public class MainActivity extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    public boolean doesPackageExist(String targetPackage){
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+
+        pm = getPackageManager();
+        packages = pm.getInstalledApplications(0);
+        for (ApplicationInfo packageInfo : packages) {
+            if(packageInfo.packageName.equals(targetPackage))
+                return true;
+        }
+        return false;
     }
 }
