@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/theView"
         android:layout_width="373dp"
-        android:layout_height="464dp"
+        android:layout_height="336dp"
         android:layout_gravity="center"
         android:background="@android:color/darker_gray" />
 

@@ -17,12 +17,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-<<<<<<< HEAD
-=======
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
->>>>>>> 7b54bad00992dae280d3d315fe771d63f7df0ca5
 import java.io.IOException;
 import java.io.InputStream;
 
