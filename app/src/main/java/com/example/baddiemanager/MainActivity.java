@@ -1,17 +1,13 @@
 package com.example.baddiemanager;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
-        EditText userField = findViewById(R.id.user);
-        String user = userField.getText().toString();
-        EditText passField = findViewById(R.id.pass);
-        String password = passField.getText().toString();
+//        EditText userField = findViewById(R.id.user);
+//        String user = userField.getText().toString();
+//        EditText passField = findViewById(R.id.pass);
+//        String password = passField.getText().toString();
 
         photoPage(v);
     }
@@ -71,9 +65,16 @@ public class MainActivity extends AppCompatActivity {
             String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
             Uri bittyToUri = Uri.parse(path);
 
+            int sticker = R.drawable.logo;
+            Uri sticky = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                    getResources().getResourcePackageName(sticker) + '/' +
+                    getResources().getResourceTypeName(sticker) + '/' +
+                    getResources().getResourceEntryName(sticker) );
+
             // STEP TWO:  SEND ALL THE INFO VIA INTENTS
             Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
             intent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
+            intent.putExtra("interactive_asset_uri", sticky);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             startActivityForResult(intent, 0);
