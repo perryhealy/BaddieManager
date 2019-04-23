@@ -139,11 +139,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int rc, int resc, Intent data) {
-        ImageView iv = null;
-        iv = ((ImageView) findViewById(R.id.theView));
-        iv.setBackgroundResource(0);
 
         if (rc == 1) {
+            ImageView iv = null;
+            iv = ((ImageView) findViewById(R.id.theView));
+            iv.setBackgroundResource(0);
             Bitmap bm = (Bitmap) data.getExtras().get("data");
             iv.setImageBitmap(bm);
 
@@ -157,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
         super.onActivityResult(rc, resc, data);
 
-        if (resc == RESULT_OK) {
+        if (rc == 0) {
+            ImageView iv = null;
+            iv = ((ImageView) findViewById(R.id.theView));
+            iv.setBackgroundResource(0);
             try {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
