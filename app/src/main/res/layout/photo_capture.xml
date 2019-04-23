@@ -41,7 +41,7 @@
         android:id="@+id/post"
         android:layout_gravity="center"
         android:background="@android:color/white"
-        android:onClick="post"
+        android:onClick="igPost"
         android:text="Post" />
 
 </LinearLayout>

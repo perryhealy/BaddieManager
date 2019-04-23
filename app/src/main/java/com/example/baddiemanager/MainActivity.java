@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     byte[] byteArray = null;
     private static final int WRITE_CODE = 1600;
     boolean havePermission = false;
+    Uri bittyToUri = null;
+    Uri sticky = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.photo_capture);
     }
 
-    public void post(View v) throws IOException {
+    public void igPost(View v) throws IOException {
 
         // STEP ZERO:  MAKE SURE WE GOT PERMISSION
         requestSinglePermission();
@@ -66,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
             // STEP ONE:  CONVERT THE BITMAP TO A URI
             String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
-            Uri bittyToUri = Uri.parse(path);
+            bittyToUri = Uri.parse(path);
 
             int sticker = R.drawable.logo;
-            Uri sticky = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+            sticky = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                     getResources().getResourcePackageName(sticker) + '/' +
                     getResources().getResourceTypeName(sticker) + '/' +
                     getResources().getResourceEntryName(sticker) );
@@ -83,46 +85,28 @@ public class MainActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             startActivityForResult(intent, 2);
+            // JUMPS TO ONACTIVITYRESULT, THEN RUNS FBPOST
 
-
-            // TODO set up the fb one to start only after insta finishes
-            Intent fbintent = new Intent("com.facebook.stories.ADD_TO_STORY");
-            fbintent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
-            fbintent.putExtra("interactive_asset_uri", sticky);
-            fbintent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            if (fbintent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(fbintent, 3);
-            }
-
-
-            // STEP THREE:  SHOW THE FINAL PAGE MEANING SUCCESS
-            setContentView(R.layout.post_page);
 
         }
 
-        // ALTERNATE METHOD THAT THREW ERRORS :(
-        /*
-        // CREATING A NEW TEMPORARY STORAGE FOR PHOTOS
-        File tempDir= Environment.getExternalStorageDirectory();
-        tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
-        tempDir.mkdir();
 
-        // line below fails; cant find the directory even tho i just made it??
-            // or is it that it cant find the file im making/???
-        File tempFile = File.createTempFile("pic", ".jpg", tempDir);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitty.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        byte[] bitmapData = bytes.toByteArray();
+    }
 
-        //write the bytes to the file
-        FileOutputStream fos = new FileOutputStream(tempFile);
-        fos.write(bitmapData);
-        fos.flush();
-        fos.close();
-        Uri bittyToUri = Uri.fromFile(tempFile);
+    public void fbPost() {
+        Intent fbintent = new Intent("com.facebook.stories.ADD_TO_STORY");
+        fbintent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
+        fbintent.putExtra("interactive_asset_uri", sticky);
+        fbintent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        */
+        if (fbintent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(fbintent, 3);
+        }
+
+
+        // STEP THREE:  SHOW THE FINAL PAGE MEANING SUCCESS
+        setContentView(R.layout.post_page);
+
     }
 
     public void camera(View v) {
@@ -169,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText("Something went wrong", Toast.LENGTH_LONG).show();
             }
 
-        } else {
-            //Toast.makeText("You haven't picked Image",Toast.LENGTH_LONG).show();
+        } else if (rc == 2){
+            fbPost();
         }
     }
 
