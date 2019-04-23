@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void post(View v) throws IOException {
-        // TODO stuff that posts to insta/fb
 
         // STEP ZERO:  MAKE SURE WE GOT PERMISSION
         requestSinglePermission();
@@ -86,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 2);
 
 
-                // TODO;; WONT WORK w FACEBOOK
-                    // it literally worked the first time and then stopped lmao wtf
+            // TODO set up the fb one to start only after insta finishes
             Intent fbintent = new Intent("com.facebook.stories.ADD_TO_STORY");
             fbintent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
             fbintent.putExtra("interactive_asset_uri", sticky);
