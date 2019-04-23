@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     // it literally worked the first time and then stopped lmao wtf
             Intent fbintent = new Intent("com.facebook.stories.ADD_TO_STORY");
             fbintent.setDataAndType(bittyToUri, getContentResolver().getType(bittyToUri));
+            fbintent.putExtra("interactive_asset_uri", sticky);
             fbintent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             if (fbintent.resolveActivity(getPackageManager()) != null) {
