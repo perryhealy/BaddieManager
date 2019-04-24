@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO figure out how to send videos to both platforms
     Bitmap bitty = null;
-    byte[] byteArray = null;
+    Bitmap stickyMap = null;
     private static final int WRITE_CODE = 1600;
     boolean havePermission = false;
     Uri bittyToUri = null;
@@ -100,11 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 bittyToUri = Uri.parse(path);
             }
 
-            int sticker = R.drawable.logo;
-            sticky = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                    getResources().getResourcePackageName(sticker) + '/' +
-                    getResources().getResourceTypeName(sticker) + '/' +
-                    getResources().getResourceEntryName(sticker) );
+
 
             // STEP TWO:  SEND ALL THE INFO VIA INTENTS
                 // INSTAGRAM
@@ -169,41 +166,39 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onActivityResult(int rc, int resc, Intent data) {
 
-        if (rc == 1) {
-            ImageView iv = null;
-            iv = ((ImageView) findViewById(R.id.theView));
-            iv.setBackgroundResource(0);
+        if (rc == TAKE_PHOTO) {
             Bitmap bm = (Bitmap) data.getExtras().get("data");
-            iv.setImageBitmap(bm);
+            bitty = bm;
+            try {
+                setImageView(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            bitty = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitty.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byteArray = stream.toByteArray();
             return;
         }
 
         super.onActivityResult(rc, resc, data);
 
-        if (rc == 0) {
-            ImageView iv = null;
-            iv = ((ImageView) findViewById(R.id.theView));
-            iv.setBackgroundResource(0);
+        if (rc == LOAD_PHOTO) {
             try {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 bitty = BitmapFactory.decodeStream(imageStream);
-                iv.setImageBitmap(bitty);
+
+                setImageView(data);
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                //Toast.makeText("Something went wrong", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-        } else if (rc == 2){
+        } else if (rc == INSTAGRAM_STORY){
             fbPost();
+
         } else if (rc == VIDEO) {
-            // TODO video saving stuff
+            // TODO video saving and viewing stuff
            // bittyToUri = data.getData();
             Log.v("VIDEO_URI", ""+bittyToUri);
 
@@ -255,5 +250,43 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+
+    public void setImageView(Intent data) throws IOException {
+        ImageView iv = null;
+        iv = ((ImageView) findViewById(R.id.theView));
+        iv.setBackgroundResource(0);
+
+        requestSinglePermission();
+
+        if (havePermission) {
+            if (bitty != null) {
+                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
+                bittyToUri = Uri.parse(path);
+            }
+
+            int sticker = R.drawable.logo;
+            sticky = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                    getResources().getResourcePackageName(sticker) + '/' +
+                    getResources().getResourceTypeName(sticker) + '/' +
+                    getResources().getResourceEntryName(sticker) );
+
+            stickyMap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), sticky);
+
+        }
+
+        Bitmap combo = createSingleImageFromMultipleImages(bitty, stickyMap);
+
+        iv.setImageBitmap(combo);
+
+    }
+
+    private Bitmap createSingleImageFromMultipleImages(Bitmap firstImage, Bitmap secondImage){
+        // TODO resize sticker smaller in the preview
+        Bitmap result = Bitmap.createBitmap(firstImage.getWidth(), firstImage.getHeight(), firstImage.getConfig());
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(firstImage, 0f, 0f, null);
+        canvas.drawBitmap(secondImage, 10, 10, null);
+        return result;
     }
 }
