@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
 public class MainActivity extends AppCompatActivity {
 
     // REQUEST CODES:
@@ -93,8 +95,10 @@ public class MainActivity extends AppCompatActivity {
         if (havePermission) {
 
             // STEP ONE:  CONVERT THE BITMAP TO A URI
-            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
-            bittyToUri = Uri.parse(path);
+            if (bitty != null) {
+                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
+                bittyToUri = Uri.parse(path);
+            }
 
             int sticker = R.drawable.logo;
             sticky = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
@@ -147,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void videoCamera(View v) {
         Intent x = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        //bittyToUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+        x.putExtra(MediaStore.EXTRA_OUTPUT, bittyToUri);
         startActivityForResult(x, VIDEO);
 
     }
@@ -196,8 +202,19 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (rc == 2){
             fbPost();
-        } else if (rc == 4) {
+        } else if (rc == VIDEO) {
             // TODO video saving stuff
+           // bittyToUri = data.getData();
+            Log.v("VIDEO_URI", ""+bittyToUri);
+
+            ImageView iv = null;
+            iv = ((ImageView) findViewById(R.id.theView));
+            iv.setBackgroundResource(0);
+
+            iv.setImageURI(bittyToUri);
+            bitty = null;
+
+            return;
         }
     }
 

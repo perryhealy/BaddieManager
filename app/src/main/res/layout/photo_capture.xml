@@ -16,9 +16,9 @@
         android:background="@android:color/darker_gray" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/capture"
@@ -30,6 +30,7 @@
             android:onClick="camera"
             android:text="Take Photo" />
 
+        <!--
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,14 +40,14 @@
             android:layout_gravity="center"
             android:background="@android:color/white"
             android:layout_margin="10dp"
-            />
+            /> -->
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/load"
@@ -57,7 +58,7 @@
             android:layout_margin="10dp"
             android:onClick="load"
             android:layout_gravity="center" />
-
+<!--
         <Button
             android:id="@+id/loadVideo"
             android:layout_width="wrap_content"
@@ -66,7 +67,7 @@
             android:background="@android:color/white"
             android:layout_margin="10dp"
             android:onClick="loadVideo"
-            android:layout_gravity="center" />
+            android:layout_gravity="center" /> -->
 
     </LinearLayout>
 
