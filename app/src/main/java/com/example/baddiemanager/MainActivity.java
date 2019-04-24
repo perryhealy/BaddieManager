@@ -275,7 +275,10 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        Bitmap combo = createSingleImageFromMultipleImages(bitty, stickyMap);
+        // scale down stickyMap
+        Bitmap smallStickyMap = Bitmap.createScaledBitmap(stickyMap, 50, 50, true);
+
+        Bitmap combo = createSingleImageFromMultipleImages(bitty, smallStickyMap);
 
         iv.setImageBitmap(combo);
 
@@ -283,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap createSingleImageFromMultipleImages(Bitmap firstImage, Bitmap secondImage){
         // TODO resize sticker smaller in the preview
+
         Bitmap result = Bitmap.createBitmap(firstImage.getWidth(), firstImage.getHeight(), firstImage.getConfig());
         Canvas canvas = new Canvas(result);
         canvas.drawBitmap(firstImage, 0f, 0f, null);
