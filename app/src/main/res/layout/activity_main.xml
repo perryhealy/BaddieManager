@@ -17,25 +17,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Make sure that you have Instagram downloaded, then get started!"
+            android:text="Make sure that you have Instagram and Facebook downloaded, then get started!"
             android:textAlignment="center"
             android:textColor="#fbfbf9"
             android:textSize="24dp" />
 
-        <!--<EditText-->
-        <!--android:id="@+id/user"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:inputType="text"-->
-        <!--android:text="username" />-->
+<<<<<<< HEAD
 
-        <!--<EditText-->
-        <!--android:id="@+id/pass"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:inputType="textPassword"-->
-        <!--android:text="password" />-->
-
+=======
+>>>>>>> f4d2d46bfaa65825f64e78cd454dce8d37b4f4e6
         <Button
             android:id="@+id/go"
             android:layout_width="match_parent"

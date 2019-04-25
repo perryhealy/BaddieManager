@@ -9,27 +9,19 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
         // 3: FACEBOOK
         // 4: VIDEO
 
-    // TODO figure out how to send videos to both platforms
     Bitmap bitty = null;
     Bitmap stickyMap = null;
-    private static final int WRITE_CODE = 1600;
-    boolean havePermission = false;
     Uri bittyToUri = null;
     Uri sticky = null;
+    boolean havePermission = false;
+
+    private static final int WRITE_CODE = 1600;
     public static int LOAD_PHOTO = 0;
     public static int TAKE_PHOTO = 1;
     public static int INSTAGRAM_STORY = 2;
@@ -61,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
-//        EditText userField = findViewById(R.id.user);
-//        String user = userField.getText().toString();
-//        EditText passField = findViewById(R.id.pass);
-//        String password = passField.getText().toString();
+<<<<<<< HEAD
 
             // use try catch ActivityNotFoundException when running an activity to the apps
+=======
+        // use try catch ActivityNotFoundException when running an activity to the apps
+>>>>>>> f4d2d46bfaa65825f64e78cd454dce8d37b4f4e6
         boolean igExists = doesPackageExist("com.instagram.android");
         boolean fbExists = doesPackageExist("com.facebook.katana");
 
@@ -100,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitty, "Title", null);
                 bittyToUri = Uri.parse(path);
             }
-
-
 
             // STEP TWO:  SEND ALL THE INFO VIA INTENTS
                 // INSTAGRAM
@@ -143,25 +133,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void camera(View v) {
         Intent x = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(x, 1);
+        startActivityForResult(x, TAKE_PHOTO);
     }
 
     public void videoCamera(View v) {
         Intent x = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        //bittyToUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
         x.putExtra(MediaStore.EXTRA_OUTPUT, bittyToUri);
         startActivityForResult(x, VIDEO);
-
     }
 
     public void load(View v) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, 0);
-    }
-
-    public void loadVideo(View v) {
-        // TODO make this shit do something
+        startActivityForResult(photoPickerIntent, LOAD_PHOTO);
     }
 
     protected void onActivityResult(int rc, int resc, Intent data) {
@@ -198,15 +182,22 @@ public class MainActivity extends AppCompatActivity {
             fbPost();
 
         } else if (rc == VIDEO) {
-            // TODO video saving and viewing stuff
-           // bittyToUri = data.getData();
+            // video saving and viewing stuff
+            bittyToUri = data.getData();
+
             Log.v("VIDEO_URI", ""+bittyToUri);
+
+            try {
+                setImageView(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             ImageView iv = null;
             iv = ((ImageView) findViewById(R.id.theView));
             iv.setBackgroundResource(0);
+            iv.setBackgroundResource(R.drawable.video_preview);
 
-            iv.setImageURI(bittyToUri);
             bitty = null;
 
             return;
@@ -253,8 +244,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setImageView(Intent data) throws IOException {
-        ImageView iv = null;
-        iv = ((ImageView) findViewById(R.id.theView));
+        ImageView iv = findViewById(R.id.theView);
         iv.setBackgroundResource(0);
 
         requestSinglePermission();
@@ -275,18 +265,17 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        // scale down stickyMap
-        Bitmap smallStickyMap = Bitmap.createScaledBitmap(stickyMap, 50, 50, true);
+        if (bitty != null) {
+            // scale down stickyMap
+            Bitmap smallStickyMap = Bitmap.createScaledBitmap(stickyMap, 50, 50, true);
 
-        Bitmap combo = createSingleImageFromMultipleImages(bitty, smallStickyMap);
+            Bitmap combo = createSingleImageFromMultipleImages(bitty, smallStickyMap);
 
-        iv.setImageBitmap(combo);
-
+            iv.setImageBitmap(combo);
+        }
     }
 
     private Bitmap createSingleImageFromMultipleImages(Bitmap firstImage, Bitmap secondImage){
-        // TODO resize sticker smaller in the preview
-
         Bitmap result = Bitmap.createBitmap(firstImage.getWidth(), firstImage.getHeight(), firstImage.getConfig());
         Canvas canvas = new Canvas(result);
         canvas.drawBitmap(firstImage, 0f, 0f, null);
