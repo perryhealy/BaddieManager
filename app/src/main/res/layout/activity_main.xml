@@ -22,20 +22,6 @@
             android:textColor="#fbfbf9"
             android:textSize="24dp" />
 
-        <!--<EditText-->
-        <!--android:id="@+id/user"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:inputType="text"-->
-        <!--android:text="username" />-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/pass"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:inputType="textPassword"-->
-        <!--android:text="password" />-->
-
         <Button
             android:id="@+id/go"
             android:layout_width="match_parent"
