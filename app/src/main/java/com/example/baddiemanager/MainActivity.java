@@ -53,16 +53,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
-<<<<<<< HEAD
-<<<<<<< HEAD
 
             // use try catch ActivityNotFoundException when running an activity to the apps
-=======
-        // use try catch ActivityNotFoundException when running an activity to the apps
->>>>>>> f4d2d46bfaa65825f64e78cd454dce8d37b4f4e6
-=======
-        // use try catch ActivityNotFoundException when running an activity to the apps
->>>>>>> f4d2d46bfaa65825f64e78cd454dce8d37b4f4e6
+
         boolean igExists = doesPackageExist("com.instagram.android");
         boolean fbExists = doesPackageExist("com.facebook.katana");
 

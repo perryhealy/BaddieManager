@@ -22,13 +22,6 @@
             android:textColor="#fbfbf9"
             android:textSize="24dp" />
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> f4d2d46bfaa65825f64e78cd454dce8d37b4f4e6
-=======
->>>>>>> f4d2d46bfaa65825f64e78cd454dce8d37b4f4e6
         <Button
             android:id="@+id/go"
             android:layout_width="match_parent"
